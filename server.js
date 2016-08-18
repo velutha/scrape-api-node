@@ -41,8 +41,8 @@ router.get('/',function(req,res){
           sitepage = page;
           return page.open('https://'+site);
       })
-      .then(function(err,status){
-        if (err){
+      .then(function(status){
+        if (status !== 'success'){
           console.log('unable to connect to site');
           res.send({message: 'Unable to connect to site'});
         } else {
