@@ -3,7 +3,6 @@ var bodyParser = require('body-parser');
 var url = require('url');
 var phantom = require('phantom');
 var json2csv = require('json2csv');
-var mongoose = require('mongoose');
 
 var app = express();
 
@@ -25,7 +24,7 @@ router.get('/',function(req,res){
   var site = query.site;
   //console.log(site);
   if(site === undefined){
-    console.log('unable to access to given site');
+    console.log('Site param not found');
     res.json({message: 'Give me a site param to work with'});
   }
   else {
@@ -42,7 +41,11 @@ router.get('/',function(req,res){
           sitepage = page;
           return page.open('https://'+site);
       })
-      .then(function(status){
+      .then(function(err,status){
+        if (err){
+          console.log('unable to connect to site');
+          res.send({message: 'Unable to connect to site'});
+        } else {
           console.log('Connected to site');
           var mainContent = sitepage.property('viewportSize', {width: screenWidth, height: screenHeight})
           .then(function() {
@@ -72,6 +75,7 @@ router.get('/',function(req,res){
               return content;
           });
           return mainContent;
+        }
       })
       .then(function(content){
           console.log(content);
