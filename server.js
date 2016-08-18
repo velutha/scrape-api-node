@@ -58,16 +58,12 @@ router.get('/',function(req,res){
                   var position = jQNode.position();
                   var height = jQNode.height();
                   var width = jQNode.width();
-                  var screenWidth = 1024;
-                  var screenHeight = 768;
                   nodes.push({
                     'widgetName': widgetName,
                     'left': position.left,
                     'top': position.top,
                     'height': height,
                     'width': width,
-                    'screenWidth': screenWidth,
-                    'screenHeight': screenHeight
                   });
                 }
                 return nodes;
@@ -81,15 +77,24 @@ router.get('/',function(req,res){
           console.log(content);
           var newSite = new Site({
             url: site,
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
             elements: content
           })
           newSite.save(function(err){
             if (err){
               console.log('error saving to database');
               console.log(err);
+              res.send({message: 'Something gone wrong. Please reach out to admin'});
             } else {
-              var csvResponse = json2csv({data: content, fields: ['widgetName','left','top','height','width', 'screenWidth','screenHeight']})
-              res.send(csvResponse);
+              if (content !== undefined) {
+                for (var i = 0; i< content.length; i++) {
+                  content[i]['screenHeight'] = screenHeight;
+                  content[i]['screenWidth'] = screenWidth;
+                }
+                var csvResponse = json2csv({data: content, fields: ['widgetName','left','top','height','width','screenWidth','screenHeight',]})
+                res.send(csvResponse);
+              }
             }
           });
           sitepage.close();

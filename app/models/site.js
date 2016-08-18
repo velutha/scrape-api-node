@@ -4,14 +4,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var siteSchema = new Schema({
   url: String,
+  screenHeight: Number,
+  screenWidth: Number,
   elements: [{
     widgetName: String,
     left: Number,
     top: Number,
     height: Number,
     width: Number,
-    screenHeight: Number,
-    screenWidth: Number
   }]
 });
 
