@@ -1,0 +1,7 @@
+*.swp
+*~
+.DS_Store
+public/uploads/*
+public/assets/*
+node_modules/*
+*.log
